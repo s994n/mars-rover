@@ -1,8 +1,18 @@
 // Types
-import { PlateauSize, Orientation } from '../types';
+import { PlateauSize, Orientation } from "../types";
 
 // Constants
-import { DIRECTIONS_LEFT_TURN, DIRECTIONS_RIGHT_TURN } from '../helpers/constants';
+import {
+  DIRECTIONS_LEFT_TURN,
+  DIRECTIONS_RIGHT_TURN,
+} from "../helpers/constants";
+
+// Helpers
+import {
+  isValidPlateauSize,
+  isValidRoverStartingPosition,
+  isValidOrientation,
+} from "../helpers/validations";
 
 export class Rover {
   private x: number;
@@ -10,7 +20,28 @@ export class Rover {
   private orientation: Orientation;
   private plateauSize: PlateauSize;
 
-  constructor(x: number, y: number, orientation: Orientation, plateauSize: PlateauSize) {
+  constructor(
+    x: number,
+    y: number,
+    orientation: Orientation,
+    plateauSize: PlateauSize
+  ) {
+    if (isValidPlateauSize(plateauSize) === false) {
+      throw new Error(
+        "Invalid plateau size, x and y must be numbers greater than 0"
+      );
+    }
+
+    if (isValidRoverStartingPosition(x, y, plateauSize) === false) {
+      throw new Error(
+        "Invalid rover position, x and y must be numbers greater than zero and within the bounds of the plateau"
+      );
+    }
+
+    if (isValidOrientation(orientation) === false) {
+      throw new Error("Invalid rover orientation, must be one of N, E, S, W");
+    }
+
     this.x = x;
     this.y = y;
     this.orientation = orientation;
@@ -44,21 +75,26 @@ export class Rover {
     let newY = this.y;
 
     switch (this.orientation) {
-      case 'N':
+      case "N":
         newY = Math.min(this.y + 1, this.plateauSize.y);
         break;
-      case 'E':
+      case "E":
         newX = Math.min(this.x + 1, this.plateauSize.x);
         break;
-      case 'S':
+      case "S":
         newY = Math.max(this.y - 1, 0);
         break;
-      case 'W':
+      case "W":
         newX = Math.max(this.x - 1, 0);
         break;
     }
 
-    if (newX >= 0 && newX <= this.plateauSize.x && newY >= 0 && newY <= this.plateauSize.y) {
+    if (
+      newX >= 0 &&
+      newX <= this.plateauSize.x &&
+      newY >= 0 &&
+      newY <= this.plateauSize.y
+    ) {
       this.x = newX;
       this.y = newY;
     } else {
@@ -69,17 +105,16 @@ export class Rover {
   navigate(instructions: string): void {
     for (const instruction of instructions) {
       switch (instruction) {
-        case 'L':
+        case "L":
           this.turnLeft();
           break;
-        case 'R':
+        case "R":
           this.turnRight();
           break;
-        case 'M':
+        case "M":
           this.moveForward();
           break;
       }
     }
   }
 }
-
