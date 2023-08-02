@@ -70,38 +70,6 @@ export class Rover {
     this.orientation = DIRECTIONS_RIGHT_TURN[nextIndex];
   }
 
-  // moveForward(): void {
-  //   let newX = this.x;
-  //   let newY = this.y;
-
-  //   switch (this.orientation) {
-  //     case "N":
-  //       newY = Math.min(this.y + 1, this.plateauSize.y);
-  //       break;
-  //     case "E":
-  //       newX = Math.min(this.x + 1, this.plateauSize.x);
-  //       break;
-  //     case "S":
-  //       newY = Math.max(this.y - 1, 0);
-  //       break;
-  //     case "W":
-  //       newX = Math.max(this.x - 1, 0);
-  //       break;
-  //   }
-
-  //   if (
-  //     newX >= 0 &&
-  //     newX <= this.plateauSize.x &&
-  //     newY >= 0 &&
-  //     newY <= this.plateauSize.y
-  //   ) {
-  //     this.x = newX;
-  //     this.y = newY;
-  //   } else {
-  //     // Optionally log a warning or handle the error more gracefully
-  //   }
-  // }
-
   navigate(instructions: string): void {
     let newX = this.x;
     let newY = this.y;
