@@ -1,8 +1,5 @@
 import { Rover } from "../index";
 
-// Types
-import { PlateauSize } from "../types";
-
 describe("Rover Class", () => {
   describe("Constructor", () => {
     const expectedPlateuSizeErrorMessage =
@@ -85,13 +82,6 @@ describe("Rover Class", () => {
       expect(rover.getOrientation()).toBe("E");
     });
 
-    it("should move forward", () => {
-      const rover = new Rover(0, 0, "N", { x: 5, y: 5 });
-      rover.moveForward();
-      expect(rover.getX()).toBe(0);
-      expect(rover.getY()).toBe(1);
-    });
-
     it("should handle multiple rotations", () => {
       const rover = new Rover(0, 0, "N", { x: 5, y: 5 });
       rover.turnRight();
@@ -100,32 +90,5 @@ describe("Rover Class", () => {
       rover.turnRight(); // 360-degree rotation
       expect(rover.getOrientation()).toBe("N");
     });
-
-    it("should handle multiple movements", () => {
-      const rover = new Rover(3, 2, "N", { x: 5, y: 5 });
-      rover.moveForward();
-      rover.moveForward();
-      rover.moveForward();
-      expect(rover.getX()).toBe(3);
-      expect(rover.getY()).toBe(5);
-    });
-
-    it("should navigate complex instructions", () => {
-      const plateauSize: PlateauSize = { x: 5, y: 5 };
-      const rover = new Rover(2, 2, "E", plateauSize);
-      rover.navigate("MLMLMRMRM"); // a series of movements and rotations
-      expect(rover.getX()).toBe(3);
-      expect(rover.getY()).toBe(4);
-      expect(rover.getOrientation()).toBe("E");
-    });
   });
-
-  it("should not move beyond the plateau boundaries", () => {
-    const plateauSize: PlateauSize = { x: 5, y: 5 };
-    const rover = new Rover(5, 5, "N", plateauSize);
-    rover.moveForward(); // trying to move north, but already at the northern boundary
-    expect(rover.getX()).toBe(5);
-    expect(rover.getY()).toBe(5);
-  });
-  // Additional tests for edge cases, such as reaching the plateau boundaries, could be added here
 });

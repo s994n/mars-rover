@@ -46,11 +46,20 @@ export class Navigation {
     this.instructions = instructions;
   }
 
+  private navigateRover(rover: Rover, instructions: string): void {
+    try {
+      rover.navigate(instructions);
+    } catch (error: any) {
+      // leave the rover stationary and log the error
+      console.error(error.message);
+    }
+  }
+
   navigateRovers(): Rover[] {
-    return this.rovers.map((rover, index) => {
-      rover.navigate(this.instructions[index]);
-      return rover;
+    this.rovers.forEach((rover, index) => {
+      this.navigateRover(rover, this.instructions[index]);
     });
+    return this.rovers;
   }
 
   getPositionsAndOrientations(): string[] {

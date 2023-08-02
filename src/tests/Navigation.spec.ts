@@ -26,13 +26,22 @@ describe("Mars Rover Navigation", () => {
     expect(finalPositions[0].getOrientation()).toEqual("N");
   });
 
+  it("navigates a rover according to complex instructions", () => {
+    const plateauSize: PlateauSize = smallPlateauSize;
+    const rover = new Rover(2, 2, "E", plateauSize);
+    rover.navigate("MLMLMRMRM");
+    expect(rover.getX()).toBe(3);
+    expect(rover.getY()).toBe(4);
+    expect(rover.getOrientation()).toBe("E");
+  });
+
   it("throws an error if no instruction is given", () => {
     const rovers = [new Rover(0, 0, "N", smallPlateauSize)];
     const instructions = [""];
 
     expect(() => {
       new Navigation(smallPlateauSize, rovers, instructions);
-    }).toThrow("Invalid instructions, must be a string of M, L, R"); // Updated error message
+    }).toThrow("Invalid instructions, must be a string of M, L, R");
   });
 
   it("navigates two rovers according to instructions", () => {
@@ -92,7 +101,8 @@ describe("Mars Rover Navigation", () => {
     });
   });
 
-  describe("Invalid instructions", () => {
+  describe("Invalid input options", () => {
+
     describe("Plateau size", () => {
       const expectedErrorMessage =
         "Invalid plateau size, x and y must be numbers greater than 0";
@@ -117,12 +127,12 @@ describe("Mars Rover Navigation", () => {
     });
 
     // Below could potentially be removed, as also covered by Rover tests
-    describe("Rover position", () => {
+    describe("Rover initial position", () => {
       it("should throw an error if x is negative", () => {
         expect(() => {
           new Navigation(
-            { x: 5, y: 5 },
-            [new Rover(-1, 0, "N", { x: 5, y: 5 })],
+            smallPlateauSize,
+            [new Rover(-1, 0, "N", smallPlateauSize)],
             [],
           );
         }).toThrow(
@@ -132,12 +142,12 @@ describe("Mars Rover Navigation", () => {
     });
 
     // Below could potentially be removed, as also covered by Rover tests
-    describe("Rover orientation", () => {
+    describe("Rover initial orientation", () => {
       it("should throw an error if the orientation is invalid", () => {
         expect(() => {
           new Navigation(
-            { x: 5, y: 5 },
-            [new Rover(0, 0, "Z" as any, { x: 5, y: 5 })],
+            smallPlateauSize,
+            [new Rover(0, 0, "Z" as any, smallPlateauSize)],
             [],
           );
         }).toThrow("Invalid rover orientation, must be one of N, E, S, W");
@@ -145,11 +155,23 @@ describe("Mars Rover Navigation", () => {
     });
 
     describe("Instructions", () => {
+      // temporarily suppress console error messages
+      beforeEach(() => {
+        jest.spyOn(console, 'error')
+        // @ts-ignore jest.spyOn adds this functionallity
+        console.error.mockImplementation(() => null);
+      });
+      
+      afterEach(() => {
+        // @ts-ignore jest.spyOn adds this functionallity
+        console.error.mockRestore()
+      })
+
       it("should throw an error if the instructions array length does not match the number of rovers", () => {
         expect(() => {
           new Navigation(
-            { x: 5, y: 5 },
-            [new Rover(0, 0, "N", { x: 5, y: 5 })],
+            smallPlateauSize,
+            [new Rover(0, 0, "N", smallPlateauSize)],
             [],
           );
         }).toThrow(
@@ -160,15 +182,62 @@ describe("Mars Rover Navigation", () => {
       it("should throw an error if the instructions are not a string", () => {
         expect(() => {
           new Navigation(
-            { x: 5, y: 5 },
-            [new Rover(0, 0, "N", { x: 5, y: 5 })],
+            smallPlateauSize,
+            [new Rover(0, 0, "N", smallPlateauSize)],
             [1 as any],
           );
         }).toThrow("Invalid instructions, must be a string");
       });
-    });
-  });
-  // add more tests here for various scenarios and edge cases
 
-  it.skip("should throw an error if the rover is already at the plateau boundary", () => {});
+      it("should throw an error if the instructions are not M, L or R", () => {
+        expect(() => {
+          new Navigation(
+            smallPlateauSize,
+            [new Rover(0, 0, "N", smallPlateauSize)],
+            ["Z"],
+          );
+        }).toThrow("Invalid instructions, must be a string of M, L, R");
+      }
+      );
+
+      it("should throw an error if the instructions are not a string comprised of M, L or R", () => {
+        expect(() => {
+          new Navigation(
+            smallPlateauSize,
+            [new Rover(0, 0, "N", smallPlateauSize)],
+            ["MMMZ"],
+          );
+        }).toThrow("Invalid instructions, must be a string of M, L, R");
+      });
+
+      it("should log an error if the instructions would result in the rover going out of bounds", () => {
+        const navigation = new Navigation(
+          smallPlateauSize,
+          [new Rover(0, 0, "N", smallPlateauSize)],
+          ["MMMMMMMMMMMMMMMMMMMMMMMM"],
+        );
+      
+        const consoleSpy = jest.spyOn(console, 'error');
+      
+        navigation.navigateRovers();
+      
+        expect(consoleSpy).toHaveBeenCalledWith("Invalid instructions, rover would go out of bounds. Keeping this rover stationary.");
+      });
+
+      it("should not move the rover if the instructions would result in the rover going out of bounds", () => {
+        const navigation = new Navigation(
+          smallPlateauSize,
+          [new Rover(0, 0, "N", smallPlateauSize)],
+          ["MMMMMMMMMMMMMMMMMMMMMMMM"],
+        );
+      
+        navigation.navigateRovers();
+      
+        const finalPositions = navigation.getPositionsAndOrientations();
+
+        expect(finalPositions).toEqual(["0 0 N"]);
+      });
+    });
+    
+  });
 });
