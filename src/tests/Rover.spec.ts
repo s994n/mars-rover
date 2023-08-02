@@ -20,55 +20,55 @@ describe("Rover Class", () => {
     it("should throw an error if the plateau size is zero", () => {
       expect(() => {
         new Rover(0, 0, "N", { x: 0, y: 0 });
-      }).toThrowError(expectedPlateuSizeErrorMessage);
+      }).toThrow(expectedPlateuSizeErrorMessage);
     });
 
     it("should throw an error if the plateau size is negative", () => {
       expect(() => {
         new Rover(0, 0, "N", { x: -1, y: -1 });
-      }).toThrowError(expectedPlateuSizeErrorMessage);
+      }).toThrow(expectedPlateuSizeErrorMessage);
     });
 
     it("should throw an error if the plateau size is not a number", () => {
       expect(() => {
         new Rover(0, 0, "N", { x: NaN, y: NaN });
-      }).toThrowError(expectedPlateuSizeErrorMessage);
+      }).toThrow(expectedPlateuSizeErrorMessage);
     });
 
     it("should throw an error if x is negative", () => {
       expect(() => {
         new Rover(-1, 0, "N", { x: 5, y: 5 });
-      }).toThrowError(expectedRoverPositionErrorMessage);
+      }).toThrow(expectedRoverPositionErrorMessage);
     });
 
     it("should throw an error if y is negative", () => {
       expect(() => {
         new Rover(0, -1, "N", { x: 5, y: 5 });
-      }).toThrowError(expectedRoverPositionErrorMessage);
+      }).toThrow(expectedRoverPositionErrorMessage);
     });
 
     it("should throw an error if x is not a number", () => {
       expect(() => {
         new Rover(NaN, 0, "N", { x: 5, y: 5 });
-      }).toThrowError(expectedRoverPositionErrorMessage);
+      }).toThrow(expectedRoverPositionErrorMessage);
     });
 
     it("should throw an error if y is not a number", () => {
       expect(() => {
         new Rover(0, NaN, "N", { x: 5, y: 5 });
-      }).toThrowError(expectedRoverPositionErrorMessage);
+      }).toThrow(expectedRoverPositionErrorMessage);
     });
 
     it("should throw and error if x is out of bounds of the plateau", () => {
       expect(() => {
         new Rover(6, 0, "N", { x: 5, y: 5 });
-      }).toThrowError(expectedRoverPositionErrorMessage);
+      }).toThrow(expectedRoverPositionErrorMessage);
     });
 
     it("should throw an error if the orientation is invalid", () => {
       expect(() => {
         new Rover(0, 0, "Z" as any, { x: 5, y: 5 });
-      }).toThrowError("Invalid rover orientation, must be one of N, E, S, W");
+      }).toThrow("Invalid rover orientation, must be one of N, E, S, W");
     });
   });
 

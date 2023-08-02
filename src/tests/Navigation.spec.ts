@@ -32,7 +32,7 @@ describe("Mars Rover Navigation", () => {
 
     expect(() => {
       new Navigation(smallPlateauSize, rovers, instructions);
-    }).toThrowError("Invalid instructions, must be a string of M, L, R"); // Updated error message
+    }).toThrow("Invalid instructions, must be a string of M, L, R"); // Updated error message
   });
 
   it("navigates two rovers according to instructions", () => {
@@ -100,19 +100,19 @@ describe("Mars Rover Navigation", () => {
       it("should throw an error if the plateau size is zero", () => {
         expect(() => {
           new Navigation({ x: 0, y: 0 }, [], []);
-        }).toThrowError(expectedErrorMessage);
+        }).toThrow(expectedErrorMessage);
       });
 
       it("should throw an error if the plateau size is negative", () => {
         expect(() => {
           new Navigation({ x: -1, y: -1 }, [], []);
-        }).toThrowError(expectedErrorMessage);
+        }).toThrow(expectedErrorMessage);
       });
 
       it("should throw an error if the plateau size is not a number", () => {
         expect(() => {
           new Navigation({ x: NaN, y: NaN }, [], []);
-        }).toThrowError(expectedErrorMessage);
+        }).toThrow(expectedErrorMessage);
       });
     });
 
@@ -123,10 +123,10 @@ describe("Mars Rover Navigation", () => {
           new Navigation(
             { x: 5, y: 5 },
             [new Rover(-1, 0, "N", { x: 5, y: 5 })],
-            []
+            [],
           );
-        }).toThrowError(
-          "Invalid rover position, x and y must be numbers greater than zero and within the bounds of the plateau"
+        }).toThrow(
+          "Invalid rover position, x and y must be numbers greater than zero and within the bounds of the plateau",
         );
       });
     });
@@ -138,9 +138,9 @@ describe("Mars Rover Navigation", () => {
           new Navigation(
             { x: 5, y: 5 },
             [new Rover(0, 0, "Z" as any, { x: 5, y: 5 })],
-            []
+            [],
           );
-        }).toThrowError("Invalid rover orientation, must be one of N, E, S, W");
+        }).toThrow("Invalid rover orientation, must be one of N, E, S, W");
       });
     });
 
@@ -150,10 +150,10 @@ describe("Mars Rover Navigation", () => {
           new Navigation(
             { x: 5, y: 5 },
             [new Rover(0, 0, "N", { x: 5, y: 5 })],
-            []
+            [],
           );
-        }).toThrowError(
-          "Invalid instructions, there must be an equal number of rovers and instructions"
+        }).toThrow(
+          "Invalid instructions, there must be an equal number of rovers and instructions",
         );
       });
 
@@ -162,9 +162,9 @@ describe("Mars Rover Navigation", () => {
           new Navigation(
             { x: 5, y: 5 },
             [new Rover(0, 0, "N", { x: 5, y: 5 })],
-            [1 as any]
+            [1 as any],
           );
-        }).toThrowError("Invalid instructions, must be a string");
+        }).toThrow("Invalid instructions, must be a string");
       });
     });
   });

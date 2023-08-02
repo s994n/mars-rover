@@ -24,17 +24,17 @@ export class Rover {
     x: number,
     y: number,
     orientation: Orientation,
-    plateauSize: PlateauSize
+    plateauSize: PlateauSize,
   ) {
     if (isValidPlateauSize(plateauSize) === false) {
       throw new Error(
-        "Invalid plateau size, x and y must be numbers greater than 0"
+        "Invalid plateau size, x and y must be numbers greater than 0",
       );
     }
 
     if (isValidRoverStartingPosition(x, y, plateauSize) === false) {
       throw new Error(
-        "Invalid rover position, x and y must be numbers greater than zero and within the bounds of the plateau"
+        "Invalid rover position, x and y must be numbers greater than zero and within the bounds of the plateau",
       );
     }
 

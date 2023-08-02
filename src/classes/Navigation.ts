@@ -23,20 +23,20 @@ export class Navigation {
   constructor(
     plateauSize: PlateauSize,
     rovers: Rover[],
-    instructions: string[]
+    instructions: string[],
   ) {
     if (isValidPlateauSize(plateauSize) === false) {
       throw new Error(
-        "Invalid plateau size, x and y must be numbers greater than 0"
+        "Invalid plateau size, x and y must be numbers greater than 0",
       );
     }
 
     if (rovers.length !== instructions.length) {
       throw new Error(
-        "Invalid instructions, there must be an equal number of rovers and instructions"
+        "Invalid instructions, there must be an equal number of rovers and instructions",
       );
     }
-    // add validation to check whether instructions are a string of M, L, R
+
     if (isValidInstructions(instructions) === false) {
       throw new Error("Invalid instructions, must be a string of M, L, R");
     }

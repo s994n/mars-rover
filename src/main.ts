@@ -24,7 +24,7 @@ function main() {
             if (roverPosition.toLowerCase() === "no") {
               if (rovers.length === 0) {
                 console.log(
-                  "At least one rover must be provided. Please input the rover position."
+                  "At least one rover must be provided. Please input the rover position.",
                 );
                 promptRoverPosition(); // Prompt for the first Rover again
                 return;
@@ -34,10 +34,10 @@ function main() {
               const navigation = new Navigation(
                 plateauSize,
                 rovers,
-                instructions
+                instructions,
               );
               navigation.navigateRovers();
-              const finalPositions = navigation.getPositionsAndOrientations()
+              const finalPositions = navigation.getPositionsAndOrientations();
               console.log(finalPositions.join("\n"));
               return;
             }
@@ -50,8 +50,8 @@ function main() {
                 Number(x),
                 Number(y),
                 orientation as Orientation,
-                plateauSize
-              )
+                plateauSize,
+              ),
             );
 
             rl.question(
@@ -59,14 +59,14 @@ function main() {
               (instruction) => {
                 instructions.push(instruction);
                 promptRoverPosition(); // Prompt for the next Rover
-              }
+              },
             );
-          }
+          },
         );
       }
 
       promptRoverPosition(); // Start with the first Rover
-    }
+    },
   );
 }
 
