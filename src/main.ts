@@ -36,12 +36,9 @@ function main() {
                 rovers,
                 instructions
               );
-              const finalPositions = navigation.navigateRovers();
-              finalPositions.forEach((rover) => {
-                console.log(
-                  `${rover.getX()} ${rover.getY()} ${rover.getOrientation()}`
-                );
-              });
+              navigation.navigateRovers();
+              const finalPositions = navigation.getPositionsAndOrientations()
+              console.log(finalPositions.join("\n"));
               return;
             }
 

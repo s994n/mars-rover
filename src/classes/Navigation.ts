@@ -1,10 +1,13 @@
-import { Rover } from './Rover';
+import { Rover } from "./Rover";
 
 // Types
-import { PlateauSize } from '../types';
+import { PlateauSize } from "../types";
 
 // Helpers
-import { isValidPlateauSize } from '../helpers/validations';
+import {
+  isValidPlateauSize,
+  isValidInstructions,
+} from "../helpers/validations";
 
 export class Navigation {
   private plateauSize: PlateauSize;
@@ -17,9 +20,25 @@ export class Navigation {
    * @param instructions An array of strings containing navigation instructions.
    * @throws {Error} If plateau size is invalid (x and y must be greater than 0).
    */
-  constructor(plateauSize: PlateauSize, rovers: Rover[], instructions: string[]) {
+  constructor(
+    plateauSize: PlateauSize,
+    rovers: Rover[],
+    instructions: string[]
+  ) {
     if (isValidPlateauSize(plateauSize) === false) {
-      throw new Error('Invalid plateau size, x and y must be numbers greater than 0');
+      throw new Error(
+        "Invalid plateau size, x and y must be numbers greater than 0"
+      );
+    }
+
+    if (rovers.length !== instructions.length) {
+      throw new Error(
+        "Invalid instructions, there must be an equal number of rovers and instructions"
+      );
+    }
+    // add validation to check whether instructions are a string of M, L, R
+    if (isValidInstructions(instructions) === false) {
+      throw new Error("Invalid instructions, must be a string of M, L, R");
     }
 
     this.plateauSize = plateauSize;
@@ -31,6 +50,12 @@ export class Navigation {
     return this.rovers.map((rover, index) => {
       rover.navigate(this.instructions[index]);
       return rover;
+    });
+  }
+
+  getPositionsAndOrientations(): string[] {
+    return this.rovers.map((rover) => {
+      return `${rover.getX()} ${rover.getY()} ${rover.getOrientation()}`;
     });
   }
 }

@@ -11,3 +11,17 @@ export const isValidRoverStartingPosition = (x: number, y: number, plateauSize: 
 export const isValidOrientation = (orientation: string): boolean => {
   return ['N', 'E', 'S', 'W'].includes(orientation);
 }
+
+export const isValidInstructions = (instructions: string[]): boolean => {
+  return instructions.every((instruction) => {
+    // Check if the instruction is a string
+    if (typeof instruction !== 'string') return false;
+
+    // Check if the instruction is empty
+    if (instruction === '') return false;
+
+    return instruction.split('').every((character) => {
+      return ['M', 'L', 'R'].includes(character);
+    });
+  });
+}
