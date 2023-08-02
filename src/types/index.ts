@@ -10,8 +10,3 @@ export type Position = {
   y: number;
   orientation: Orientation;
 };
-
-export type Rover = {
-  position: Position;
-  instructions: string;
-};
