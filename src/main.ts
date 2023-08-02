@@ -1,35 +1,69 @@
-// // Types
-import { PlateauSize } from './types';
+// Types
+import { PlateauSize, Orientation } from './types';
+
+// Constants for directions
+const DIRECTIONS_LEFT_TURN: Orientation[] = ['N', 'W', 'S', 'E'];
+const DIRECTIONS_RIGHT_TURN: Orientation[] = ['N', 'E', 'S', 'W'];
 
 export class Rover {
-  constructor(public x: number, public y: number, public orientation: 'N' | 'E' | 'S' | 'W', private plateauSize: PlateauSize) {}
+  private x: number;
+  private y: number;
+  private orientation: Orientation;
+  private plateauSize: PlateauSize;
+
+  constructor(x: number, y: number, orientation: Orientation, plateauSize: PlateauSize) {
+    this.x = x;
+    this.y = y;
+    this.orientation = orientation;
+    this.plateauSize = plateauSize;
+  }
+
+  getX(): number {
+    return this.x;
+  }
+
+  getY(): number {
+    return this.y;
+  }
+
+  getOrientation(): Orientation {
+    return this.orientation;
+  }
 
   turnLeft(): void {
-    const directions: this['orientation'][] = ['N', 'W', 'S', 'E'];
-    const nextIndex = (directions.indexOf(this.orientation) + 1) % 4;
-    this.orientation = directions[nextIndex];
+    const nextIndex = (DIRECTIONS_LEFT_TURN.indexOf(this.orientation) + 1) % 4;
+    this.orientation = DIRECTIONS_LEFT_TURN[nextIndex];
   }
 
   turnRight(): void {
-    const directions: this['orientation'][] = ['N', 'E', 'S', 'W'];
-    const nextIndex = (directions.indexOf(this.orientation) + 1) % 4;
-    this.orientation = directions[nextIndex];
+    const nextIndex = (DIRECTIONS_RIGHT_TURN.indexOf(this.orientation) + 1) % 4;
+    this.orientation = DIRECTIONS_RIGHT_TURN[nextIndex];
   }
 
   moveForward(): void {
+    let newX = this.x;
+    let newY = this.y;
+
     switch (this.orientation) {
       case 'N':
-        this.y = Math.min(this.y + 1, this.plateauSize.y);
+        newY = Math.min(this.y + 1, this.plateauSize.y);
         break;
       case 'E':
-        this.x = Math.min(this.x + 1, this.plateauSize.x);
+        newX = Math.min(this.x + 1, this.plateauSize.x);
         break;
       case 'S':
-        this.y = Math.max(this.y - 1, 0);
+        newY = Math.max(this.y - 1, 0);
         break;
       case 'W':
-        this.x = Math.max(this.x - 1, 0);
+        newX = Math.max(this.x - 1, 0);
         break;
+    }
+
+    if (newX >= 0 && newX <= this.plateauSize.x && newY >= 0 && newY <= this.plateauSize.y) {
+      this.x = newX;
+      this.y = newY;
+    } else {
+      // Optionally log a warning or handle the error more gracefully
     }
   }
 
@@ -51,7 +85,15 @@ export class Rover {
 }
 
 export class Navigation {
-  constructor(private plateauSize: PlateauSize, private rovers: Rover[], private instructions: string[]) {}
+  private plateauSize: PlateauSize;
+  private rovers: Rover[];
+  private instructions: string[];
+
+  constructor(plateauSize: PlateauSize, rovers: Rover[], instructions: string[]) {
+    this.plateauSize = plateauSize;
+    this.rovers = rovers;
+    this.instructions = instructions;
+  }
 
   navigateRovers(): Rover[] {
     return this.rovers.map((rover, index) => {

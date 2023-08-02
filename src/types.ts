@@ -3,10 +3,12 @@ export type PlateauSize = {
   y: number;
 };
 
+export type Orientation = 'N' | 'E' | 'S' | 'W';
+
 export type Position = {
   x: number;
   y: number;
-  orientation: 'N' | 'E' | 'S' | 'W';
+  orientation: Orientation;
 };
 
 export type Rover = {
