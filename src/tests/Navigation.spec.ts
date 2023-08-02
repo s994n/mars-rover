@@ -102,7 +102,6 @@ describe("Mars Rover Navigation", () => {
   });
 
   describe("Invalid input options", () => {
-
     describe("Plateau size", () => {
       const expectedErrorMessage =
         "Invalid plateau size, x and y must be numbers greater than 0";
@@ -157,15 +156,17 @@ describe("Mars Rover Navigation", () => {
     describe("Instructions", () => {
       // temporarily suppress console error messages
       beforeEach(() => {
-        jest.spyOn(console, 'error')
+        jest.spyOn(console, "error");
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore jest.spyOn adds this functionallity
         console.error.mockImplementation(() => null);
       });
-      
+
       afterEach(() => {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore jest.spyOn adds this functionallity
-        console.error.mockRestore()
-      })
+        console.error.mockRestore();
+      });
 
       it("should throw an error if the instructions array length does not match the number of rovers", () => {
         expect(() => {
@@ -197,8 +198,7 @@ describe("Mars Rover Navigation", () => {
             ["Z"],
           );
         }).toThrow("Invalid instructions, must be a string of M, L, R");
-      }
-      );
+      });
 
       it("should throw an error if the instructions are not a string comprised of M, L or R", () => {
         expect(() => {
@@ -216,12 +216,14 @@ describe("Mars Rover Navigation", () => {
           [new Rover(0, 0, "N", smallPlateauSize)],
           ["MMMMMMMMMMMMMMMMMMMMMMMM"],
         );
-      
-        const consoleSpy = jest.spyOn(console, 'error');
-      
+
+        const consoleSpy = jest.spyOn(console, "error");
+
         navigation.navigateRovers();
-      
-        expect(consoleSpy).toHaveBeenCalledWith("Invalid instructions, rover would go out of bounds. Keeping this rover stationary.");
+
+        expect(consoleSpy).toHaveBeenCalledWith(
+          "Invalid instructions, rover would go out of bounds. Keeping this rover stationary.",
+        );
       });
 
       it("should not move the rover if the instructions would result in the rover going out of bounds", () => {
@@ -230,14 +232,13 @@ describe("Mars Rover Navigation", () => {
           [new Rover(0, 0, "N", smallPlateauSize)],
           ["MMMMMMMMMMMMMMMMMMMMMMMM"],
         );
-      
+
         navigation.navigateRovers();
-      
+
         const finalPositions = navigation.getPositionsAndOrientations();
 
         expect(finalPositions).toEqual(["0 0 N"]);
       });
     });
-    
   });
 });

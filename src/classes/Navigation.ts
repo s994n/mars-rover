@@ -49,9 +49,9 @@ export class Navigation {
   private navigateRover(rover: Rover, instructions: string): void {
     try {
       rover.navigate(instructions);
-    } catch (error: any) {
+    } catch (error) {
       // leave the rover stationary and log the error
-      console.error(error.message);
+      console.error((error as Error).message);
     }
   }
 

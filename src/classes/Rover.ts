@@ -73,7 +73,7 @@ export class Rover {
   navigate(instructions: string): void {
     let newX = this.x;
     let newY = this.y;
-    
+
     for (const instruction of instructions) {
       switch (instruction) {
         case "L":
@@ -97,7 +97,7 @@ export class Rover {
               newX = newX - 1;
               break;
           }
-  
+
           // Check if the new position is out of bounds
           if (
             newX < 0 ||
@@ -105,12 +105,14 @@ export class Rover {
             newY < 0 ||
             newY > this.plateauSize.y
           ) {
-            throw new Error("Invalid instructions, rover would go out of bounds. Keeping this rover stationary.");
+            throw new Error(
+              "Invalid instructions, rover would go out of bounds. Keeping this rover stationary.",
+            );
           }
           break;
       }
     }
-  
+
     // Update the rover's position if not out of bounds
     this.x = newX;
     this.y = newY;
