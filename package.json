@@ -1,0 +1,8 @@
+{
+  "name": "mars-rover",
+  "version": "1.0.0",
+  "description": "Solution to Mars Rover technical Challenge",
+  "main": "index.js",
+  "author": "SimonN",
+  "license": "MIT"
+}
