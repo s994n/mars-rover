@@ -36,23 +36,47 @@ export class Navigation {
     rovers: Rover[],
     instructions: string[],
   ) {
+    this.validatePlateauSize(plateauSize);
+    this.validateInstructionsCount(rovers, instructions);
+    this.validateInstructionStrings(instructions);
+    this.checkForDuplicatePositions(rovers);
+
+    this.plateauSize = plateauSize;
+    this.rovers = rovers;
+    this.instructions = instructions;
+  }
+
+  private validatePlateauSize(plateauSize: PlateauSize): void {
     if (isValidPlateauSize(plateauSize) === false) {
       throw new Error(
         "Invalid plateau size, x and y must be numbers greater than 0",
       );
     }
+  }
 
+  private validateInstructionsCount(
+    rovers: Rover[],
+    instructions: string[],
+  ): void {
     if (rovers.length !== instructions.length) {
       throw new Error(
         "Invalid instructions, there must be an equal number of rovers and instructions",
       );
     }
+  }
 
+  private validateInstructionStrings(instructions: string[]): void {
     if (isValidInstructions(instructions) === false) {
       throw new Error("Invalid instructions, must be a string of M, L, R");
     }
+  }
 
-    // Check for duplicate rover positions
+  /**
+   * Checks for duplicate rover positions.
+   * @param rovers Array of Rover objects.
+   * @throws {Error} If two or more rovers have the same initial position.
+   */
+  private checkForDuplicatePositions(rovers: Rover[]): void {
     const positions = new Set<string>();
     rovers.forEach((rover) => {
       const position = `${rover.getX()},${rover.getY()}`;
@@ -63,11 +87,15 @@ export class Navigation {
       }
       positions.add(position);
     });
-
-    this.plateauSize = plateauSize;
-    this.rovers = rovers;
-    this.instructions = instructions;
   }
+
+  /**
+   * Navigates a single rover based on its instructions.
+   * @param rover The Rover object to navigate.
+   * @param instructions Navigation instructions for the rover.
+   * @param occupiedPositions Set of coordinates currently occupied by rovers.
+   * @param index The index of the rover in the rovers array.
+   */
 
   private navigateRover(
     rover: Rover,
@@ -89,6 +117,10 @@ export class Navigation {
     occupiedPositions.add(newPosition); // Add the new position
   }
 
+  /**
+   * Navigates all rovers based on their instructions.
+   * @returns {Rover[]} Array of Rover objects after navigation.
+   */
   navigateRovers(): Rover[] {
     const occupiedPositions = new Set<string>();
     this.rovers.forEach((rover) =>
@@ -105,6 +137,10 @@ export class Navigation {
     return this.rovers;
   }
 
+  /**
+   * Gets the positions and orientations of all rovers.
+   * @returns {string[]} Array of strings representing the position and orientation of each rover.
+   */
   getPositionsAndOrientations(): string[] {
     return this.rovers.map((rover) => {
       return rover.getPositionAndOrientation();

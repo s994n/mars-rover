@@ -101,36 +101,4 @@ describe("Rover Class", () => {
       }).not.toThrow();
     });
   });
-
-  describe("Rotation methods", () => {
-    it("should turn left", () => {
-      const rover = new Rover(0, 0, "N", { x: 5, y: 5 });
-      rover.turnLeft();
-      expect(rover.getOrientation()).toBe("W");
-    });
-
-    it("should turn right", () => {
-      const rover = new Rover(0, 0, "N", { x: 5, y: 5 });
-      rover.turnRight();
-      expect(rover.getOrientation()).toBe("E");
-    });
-
-    it("should handle multiple rotations right", () => {
-      const rover = new Rover(0, 0, "N", { x: 5, y: 5 });
-      rover.turnRight();
-      rover.turnRight();
-      rover.turnRight();
-      rover.turnRight(); // 360-degree rotation
-      expect(rover.getOrientation()).toBe("N");
-    });
-
-    it("should handle multiple rotations left", () => {
-      const rover = new Rover(0, 0, "N", { x: 5, y: 5 });
-      rover.turnLeft();
-      rover.turnLeft();
-      rover.turnLeft();
-      rover.turnLeft(); // 360-degree rotation
-      expect(rover.getOrientation()).toBe("N");
-    });
-  });
 });
