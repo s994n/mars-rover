@@ -19,7 +19,7 @@ function main() {
 
       function promptRoverPosition() {
         rl.question(
-          "Input new Rover position (default (0 0 N); or input 'No' for no new rovers): ",
+          "Input new Rover position as x y orientation, separated by spaces; e.g. 0 1 N. (default (0 0 N); or input 'No' for no new rovers): ",
           (roverPosition) => {
             if (roverPosition.toLowerCase() === "no") {
               if (rovers.length === 0) {

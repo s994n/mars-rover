@@ -1,5 +1,3 @@
-Certainly! Here's the revised README for a project that uses Yarn instead of npm:
-
 # Mars Rover Technical Challenge
 
 ## Description
@@ -42,35 +40,26 @@ The project includes unit tests to ensure code quality. You can run the tests us
 yarn test
 ```
 
-## How to Run the Code
+## How to Run the Code for manual testing
 
-You can compile and run the code in two ways:
+This codebase includes a `main.ts` file to allow manual testing using Node's readline interface. You can manually input plateau size, rover positions, and navigation instructions.
 
-1. **Using the Compile and Run Script:**
-   ```
-   yarn compileAndRun
-   ```
-
-2. **Manual Testing:**
-   This codebase also includes a `main.ts` file to allow manual testing using Node's readline interface. You can manually input plateau size, rover positions, and navigation instructions. Run it with:
-   ```
-   yarn start
-   ```
+To manually test the code, you can compile and run the code via either `yarn compileAndRun` (build the dist and run it) or `yarn start`
 
 ## Assumptions and Constraints
 The following assumptions and constraints apply to the Mars Rover implementation as described in the codebase:
 * A collision is considered to be two or more rovers occupying the same grid position.
 * Two or more rovers cannot be constructed at the same initial position. An error will be thrown if this occurs.
-* If a collision with another rover would occur, an error is thrown, and the rover that would cause the collision remains stationary.
+* If an instruction to a rover means that a collision with another rover would occur, an error is thrown, and the rover that would cause the collision remains stationary.
 * If a rover is instructed over the boundary of the plateau, an error is thrown, and that rover remains stationary, but other rovers continue to move.
 
 ### Example Input
 
 ```
 Input plateau size (x y, separated by a space): 5 5
-Input new Rover position (default (0 0 N); or input 'No' for no new rovers): 1 2 N
+Input new Rover position as x y orientation, separated by spaces; e.g. 0 1 N. (default (0 0 N); or input 'No' for no new rovers): 1 2 N
 Input instructions for this Rover: MM
-Input new Rover position (default (0 0 N); or input 'No' for no new rovers): No
+Input new Rover position as x y orientation, separated by spaces; e.g. 0 1 N. (default (0 0 N); or input 'No' for no new rovers): No
 // 1 4 N
 ```
 
