@@ -74,12 +74,19 @@ export class Rover {
     this.orientation = DIRECTIONS_RIGHT_TURN[nextIndex];
   }
 
-  private isCollision(occupiedPositions: Set<string>, newX: number, newY: number): boolean {
+  private isCollision(
+    occupiedPositions: Set<string>,
+    newX: number,
+    newY: number,
+  ): boolean {
     return occupiedPositions.has(`${newX},${newY}`);
   }
 
-
-  navigate(instructions: string, occupiedPositions: Set<string>, roverIndex: number): void {
+  navigate(
+    instructions: string,
+    occupiedPositions: Set<string>,
+    roverIndex: number,
+  ): void {
     let newX = this.x;
     let newY = this.y;
 
@@ -109,7 +116,9 @@ export class Rover {
 
           // Check if the new expected position is occupied
           if (this.isCollision(occupiedPositions, newX, newY)) {
-            throw new Error(`Collision for Rover ${roverIndex} would occur at ${newX} ${newY}. Keeping this rover stationary.`);
+            throw new Error(
+              `Collision for Rover ${roverIndex} would occur at ${newX} ${newY}. Keeping this rover stationary.`,
+            );
           }
 
           // Check if the new position is out of bounds

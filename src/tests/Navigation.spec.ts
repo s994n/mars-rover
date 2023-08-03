@@ -7,25 +7,25 @@ describe("Mars Rover Navigation", () => {
   const smallPlateauSize: PlateauSize = { x: 5, y: 5 };
   const rectanglePlateauSize: PlateauSize = { x: 5, y: 10 };
 
-    // temporarily suppress console error messages
-    beforeEach(() => {
-      jest.spyOn(console, "error");
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore jest.spyOn adds this functionallity
-      console.error.mockImplementation(() => null);
-    });
+  // temporarily suppress console error messages
+  beforeEach(() => {
+    jest.spyOn(console, "error");
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore jest.spyOn adds this functionallity
+    console.error.mockImplementation(() => null);
+  });
 
-    afterEach(() => {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore jest.spyOn adds this functionallity
-      console.error.mockRestore();
-    });
+  afterEach(() => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore jest.spyOn adds this functionallity
+    console.error.mockRestore();
+  });
 
   describe("Constructor", () => {
     it("should create a new Navigation object", () => {
       const rovers = [new Rover(0, 0, "N", smallPlateauSize)];
       const instructions = ["M"];
-  
+
       const navigation = new Navigation(smallPlateauSize, rovers, instructions);
       expect(navigation).toBeInstanceOf(Navigation);
     });
@@ -102,15 +102,6 @@ describe("Mars Rover Navigation", () => {
     expect(rover.getOrientation()).toBe("E");
   });
 
-  it("throws an error if no instruction is given", () => {
-    const rovers = [new Rover(0, 0, "N", smallPlateauSize)];
-    const instructions = [""];
-
-    expect(() => {
-      new Navigation(smallPlateauSize, rovers, instructions);
-    }).toThrow("Invalid instructions, must be a string of M, L, R");
-  });
-
   it("navigates two rovers according to instructions", () => {
     const rovers = [
       new Rover(1, 2, "N", smallPlateauSize),
@@ -165,6 +156,20 @@ describe("Mars Rover Navigation", () => {
       const finalPositions = navigation.getPositionsAndOrientations();
 
       expect(finalPositions).toEqual(["0 1 N", "1 1 E"]);
+    });
+
+    it("Returns the same number of positions and orientations as there are rovers", () => {
+      const rovers = [
+        new Rover(0, 0, "N", smallPlateauSize),
+        new Rover(1, 1, "N", smallPlateauSize),
+      ];
+      const instructions = ["M", "R"];
+
+      const navigation = new Navigation(smallPlateauSize, rovers, instructions);
+      navigation.navigateRovers();
+      const finalPositions = navigation.getPositionsAndOrientations();
+
+      expect(finalPositions.length).toBe(rovers.length);
     });
   });
 
@@ -221,6 +226,15 @@ describe("Mars Rover Navigation", () => {
     });
 
     describe("Instructions", () => {
+      it("throws an error if no instruction is given", () => {
+        const rovers = [new Rover(0, 0, "N", smallPlateauSize)];
+        const instructions = [""];
+
+        expect(() => {
+          new Navigation(smallPlateauSize, rovers, instructions);
+        }).toThrow("Invalid instructions, must be a string of M, L, R");
+      });
+
       it("should throw an error if the instructions array length does not match the number of rovers", () => {
         expect(() => {
           new Navigation(
