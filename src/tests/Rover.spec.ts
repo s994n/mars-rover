@@ -101,4 +101,46 @@ describe("Rover Class", () => {
       }).not.toThrow();
     });
   });
+
+  describe("navigate method", () => {
+    const plateauSize = { x: 5, y: 5 };
+
+    it("should turn the rover left correctly", () => {
+      const rover = new Rover(0, 0, "N", plateauSize);
+      rover.navigate("L", new Set([]), 0);
+      expect(rover.getOrientation()).toBe("W");
+    });
+
+    it("should turn the rover right correctly", () => {
+      const rover = new Rover(0, 0, "N", plateauSize);
+      rover.navigate("R", new Set([]), 0);
+      expect(rover.getOrientation()).toBe("E");
+    });
+
+    it("should move the rover forward correctly", () => {
+      const rover = new Rover(0, 0, "N", plateauSize);
+      rover.navigate("M", new Set([]), 0);
+      expect(rover.getPositionAndOrientation()).toBe("0 1 N");
+    });
+
+    it("should handle a complex set of instructions correctly", () => {
+      const rover = new Rover(1, 2, "E", plateauSize);
+      rover.navigate("MLMLMRM", new Set(["1,2"]), 0);
+      expect(rover.getPositionAndOrientation()).toBe("1 4 N");
+    });
+
+    it("should throw an error if the rover would collide with another rover", () => {
+      const rover = new Rover(0, 0, "N", plateauSize);
+      expect(() => {
+        rover.navigate("M", new Set(["0,1"]), 0);
+      }).toThrow(`Collision for Rover 0 would occur at 0 1. Keeping this rover stationary.`);
+    });
+
+    it("should throw an error if the rover would go out of bounds", () => {
+      const rover = new Rover(5, 5, "N", plateauSize);
+      expect(() => {
+        rover.navigate("M", new Set([]), 0);
+      }).toThrow("Invalid instructions, rover would go out of bounds. Keeping this rover stationary.");
+    });
+  });
 });
