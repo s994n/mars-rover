@@ -5,6 +5,7 @@ import { PlateauSize } from "../types";
 
 describe("Mars Rover Navigation", () => {
   const smallPlateauSize: PlateauSize = { x: 5, y: 5 };
+  const rectanglePlateauSize: PlateauSize = { x: 5, y: 10 };
 
   it("should create a new Navigation object", () => {
     const rovers = [new Rover(0, 0, "N", smallPlateauSize)];
@@ -24,6 +25,34 @@ describe("Mars Rover Navigation", () => {
     expect(finalPositions[0].getX()).toEqual(0);
     expect(finalPositions[0].getY()).toEqual(1);
     expect(finalPositions[0].getOrientation()).toEqual("N");
+  });
+
+  it("navigates a rover forward on a large plateau", () => {
+    const maxPlateauY = 100;
+    const plateauSize: PlateauSize = { x: 100, y: maxPlateauY };
+    const rovers = [new Rover(0, 0, "N", plateauSize)];
+
+    const maxInstructionsLength = Math.floor(Math.random() * maxPlateauY);
+    const instructions = Array.from({ length: maxInstructionsLength }, () => "M").join("");
+
+    const navigation = new Navigation(plateauSize, rovers, [instructions]);
+    const finalPositions = navigation.navigateRovers();
+
+    expect(finalPositions[0].getX()).toEqual(0);
+    expect(finalPositions[0].getY()).toEqual(instructions.length);
+    expect(finalPositions[0].getOrientation()).toEqual("N");
+  });
+
+  it("navigates a rover on a rectangle plateau", () => {
+    const rovers = [new Rover(0, 0, "N", rectanglePlateauSize)];
+    const instructions = ["MMRMR"];
+
+    const navigation = new Navigation(rectanglePlateauSize, rovers, instructions);
+    const finalPositions = navigation.navigateRovers();
+
+    expect(finalPositions[0].getX()).toEqual(1);
+    expect(finalPositions[0].getY()).toEqual(2);
+    expect(finalPositions[0].getOrientation()).toEqual("S");
   });
 
   it("navigates a rover according to complex instructions", () => {

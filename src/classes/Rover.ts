@@ -60,6 +60,10 @@ export class Rover {
     return this.orientation;
   }
 
+  getPositionAndOrientation(): string {
+    return `${this.x} ${this.y} ${this.orientation}`;
+  }
+
   turnLeft(): void {
     const nextIndex = (DIRECTIONS_LEFT_TURN.indexOf(this.orientation) + 1) % 4;
     this.orientation = DIRECTIONS_LEFT_TURN[nextIndex];

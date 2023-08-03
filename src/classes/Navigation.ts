@@ -19,6 +19,17 @@ export class Navigation {
    * @param rovers An array of Rover objects.
    * @param instructions An array of strings containing navigation instructions.
    * @throws {Error} If plateau size is invalid (x and y must be greater than 0).
+   * @throws {Error} If there are not an equal number of rovers and instructions.
+   * @throws {Error} If instructions are invalid (must be a string of M, L, R).
+   * @returns {Navigation} A new Navigation object.
+   * @example
+   * const plateauSize: PlateauSize = { x: 5, y: 5 };
+   * const rovers = [new Rover(0, 0, "N", plateauSize)];
+   * const instructions = ["M"];
+   * const navigation = new Navigation(plateauSize, rovers, instructions);
+   * navigation.navigateRovers();
+   * navigation.getPositionsAndOrientations();
+   * // => ["0 1 N"]
    */
   constructor(
     plateauSize: PlateauSize,
@@ -64,7 +75,7 @@ export class Navigation {
 
   getPositionsAndOrientations(): string[] {
     return this.rovers.map((rover) => {
-      return `${rover.getX()} ${rover.getY()} ${rover.getOrientation()}`;
+      return rover.getPositionAndOrientation();
     });
   }
 }

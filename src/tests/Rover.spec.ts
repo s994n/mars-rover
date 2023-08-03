@@ -1,4 +1,5 @@
 import { Rover } from "../index";
+import { Orientation } from "../types";
 
 describe("Rover Class", () => {
   describe("Constructor", () => {
@@ -12,6 +13,17 @@ describe("Rover Class", () => {
       expect(rover.getX()).toBe(0);
       expect(rover.getY()).toBe(0);
       expect(rover.getOrientation()).toBe("N");
+    });
+
+    it("should return the rover position and orientation as a string", () => {
+      const rover = new Rover(0, 0, "N", { x: 5, y: 5 });
+      expect(rover.getPositionAndOrientation()).toBe("0 0 N");
+    });
+
+    it("should throw an error if the plateau size is not an object", () => {
+      expect(() => {
+        new Rover(0, 0, "N", "{}" as any);
+      }).toThrow(expectedPlateuSizeErrorMessage);
     });
 
     it("should throw an error if the plateau size is zero", () => {
@@ -67,9 +79,30 @@ describe("Rover Class", () => {
         new Rover(0, 0, "Z" as any, { x: 5, y: 5 });
       }).toThrow("Invalid rover orientation, must be one of N, E, S, W");
     });
+
+    it("can be constructed with a valid orientation", () => {
+      const orientations: Orientation[] = ["N", "E", "S", "W"];
+      const randomOrientation =
+        orientations[Math.floor(Math.random() * orientations.length)];
+
+      expect(() => {
+        new Rover(0, 0, randomOrientation, { x: 5, y: 5 });
+      }).not.toThrow();
+    });
+
+    it("can be constructed with a valid plateau size up to 1000x1000", () => {
+      const randomPlateauSize = {
+        x: Math.floor(Math.random() * 1000),
+        y: Math.floor(Math.random() * 1000),
+      };
+
+      expect(() => {
+        new Rover(0, 0, "N", randomPlateauSize);
+      }).not.toThrow();
+    });
   });
 
-  describe("Movement methods", () => {
+  describe("Rotation methods", () => {
     it("should turn left", () => {
       const rover = new Rover(0, 0, "N", { x: 5, y: 5 });
       rover.turnLeft();
@@ -82,12 +115,21 @@ describe("Rover Class", () => {
       expect(rover.getOrientation()).toBe("E");
     });
 
-    it("should handle multiple rotations", () => {
+    it("should handle multiple rotations right", () => {
       const rover = new Rover(0, 0, "N", { x: 5, y: 5 });
       rover.turnRight();
       rover.turnRight();
       rover.turnRight();
       rover.turnRight(); // 360-degree rotation
+      expect(rover.getOrientation()).toBe("N");
+    });
+
+    it("should handle multiple rotations left", () => {
+      const rover = new Rover(0, 0, "N", { x: 5, y: 5 });
+      rover.turnLeft();
+      rover.turnLeft();
+      rover.turnLeft();
+      rover.turnLeft(); // 360-degree rotation
       expect(rover.getOrientation()).toBe("N");
     });
   });
