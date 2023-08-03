@@ -30,10 +30,8 @@ export const isValidOrientation = (orientation: string): boolean => {
 
 export const isValidInstructions = (instructions: string[]): boolean => {
   return instructions.every((instruction) => {
-    // Check if the instruction is a string
     if (typeof instruction !== "string") return false;
 
-    // Check if the instruction is empty
     if (instruction === "") return false;
 
     return instruction.split("").every((character) => {

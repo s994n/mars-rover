@@ -52,23 +52,55 @@ export class Navigation {
       throw new Error("Invalid instructions, must be a string of M, L, R");
     }
 
+    // Check for duplicate rover positions
+    const positions = new Set<string>();
+    rovers.forEach((rover) => {
+      const position = `${rover.getX()},${rover.getY()}`;
+      if (positions.has(position)) {
+        throw new Error(
+          `Two or more rovers have been constructed at the same position: ${position}`,
+        );
+      }
+      positions.add(position);
+    });
+
     this.plateauSize = plateauSize;
     this.rovers = rovers;
     this.instructions = instructions;
   }
 
-  private navigateRover(rover: Rover, instructions: string): void {
+  private navigateRover(
+    rover: Rover,
+    instructions: string,
+    occupiedPositions: Set<string>,
+    index: number,
+  ): void {
+    const initialPosition = `${rover.getX()},${rover.getY()}`;
+    occupiedPositions.delete(initialPosition); // Remove the initial position
     try {
-      rover.navigate(instructions);
+      rover.navigate(instructions, occupiedPositions, index);
     } catch (error) {
       // leave the rover stationary and log the error
       console.error((error as Error).message);
+      occupiedPositions.add(initialPosition); // Add the initial position back if there was an error
+      return;
     }
+    const newPosition = `${rover.getX()},${rover.getY()}`;
+    occupiedPositions.add(newPosition); // Add the new position
   }
 
   navigateRovers(): Rover[] {
+    const occupiedPositions = new Set<string>();
+    this.rovers.forEach((rover) =>
+      occupiedPositions.add(`${rover.getX()},${rover.getY()}`),
+    );
     this.rovers.forEach((rover, index) => {
-      this.navigateRover(rover, this.instructions[index]);
+      this.navigateRover(
+        rover,
+        this.instructions[index],
+        occupiedPositions,
+        index,
+      );
     });
     return this.rovers;
   }

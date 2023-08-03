@@ -7,12 +7,43 @@ describe("Mars Rover Navigation", () => {
   const smallPlateauSize: PlateauSize = { x: 5, y: 5 };
   const rectanglePlateauSize: PlateauSize = { x: 5, y: 10 };
 
-  it("should create a new Navigation object", () => {
-    const rovers = [new Rover(0, 0, "N", smallPlateauSize)];
-    const instructions = ["M"];
+    // temporarily suppress console error messages
+    beforeEach(() => {
+      jest.spyOn(console, "error");
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore jest.spyOn adds this functionallity
+      console.error.mockImplementation(() => null);
+    });
 
-    const navigation = new Navigation(smallPlateauSize, rovers, instructions);
-    expect(navigation).toBeInstanceOf(Navigation);
+    afterEach(() => {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore jest.spyOn adds this functionallity
+      console.error.mockRestore();
+    });
+
+  describe("Constructor", () => {
+    it("should create a new Navigation object", () => {
+      const rovers = [new Rover(0, 0, "N", smallPlateauSize)];
+      const instructions = ["M"];
+  
+      const navigation = new Navigation(smallPlateauSize, rovers, instructions);
+      expect(navigation).toBeInstanceOf(Navigation);
+    });
+
+    it("should throw an error if two rovers are constructed at the same position", () => {
+      expect(() => {
+        new Navigation(
+          smallPlateauSize,
+          [
+            new Rover(1, 1, "N", smallPlateauSize),
+            new Rover(1, 1, "N", smallPlateauSize),
+          ],
+          ["M", "M"],
+        );
+      }).toThrow(
+        "Two or more rovers have been constructed at the same position: 1,1",
+      );
+    });
   });
 
   it("navigates a rover according to some simple instructions", () => {
@@ -33,7 +64,10 @@ describe("Mars Rover Navigation", () => {
     const rovers = [new Rover(0, 0, "N", plateauSize)];
 
     const maxInstructionsLength = Math.floor(Math.random() * maxPlateauY);
-    const instructions = Array.from({ length: maxInstructionsLength }, () => "M").join("");
+    const instructions = Array.from(
+      { length: maxInstructionsLength },
+      () => "M",
+    ).join("");
 
     const navigation = new Navigation(plateauSize, rovers, [instructions]);
     const finalPositions = navigation.navigateRovers();
@@ -47,7 +81,11 @@ describe("Mars Rover Navigation", () => {
     const rovers = [new Rover(0, 0, "N", rectanglePlateauSize)];
     const instructions = ["MMRMR"];
 
-    const navigation = new Navigation(rectanglePlateauSize, rovers, instructions);
+    const navigation = new Navigation(
+      rectanglePlateauSize,
+      rovers,
+      instructions,
+    );
     const finalPositions = navigation.navigateRovers();
 
     expect(finalPositions[0].getX()).toEqual(1);
@@ -58,7 +96,7 @@ describe("Mars Rover Navigation", () => {
   it("navigates a rover according to complex instructions", () => {
     const plateauSize: PlateauSize = smallPlateauSize;
     const rover = new Rover(2, 2, "E", plateauSize);
-    rover.navigate("MLMLMRMRM");
+    rover.navigate("MLMLMRMRM", new Set<string>(), 0);
     expect(rover.getX()).toBe(3);
     expect(rover.getY()).toBe(4);
     expect(rover.getOrientation()).toBe("E");
@@ -183,20 +221,6 @@ describe("Mars Rover Navigation", () => {
     });
 
     describe("Instructions", () => {
-      // temporarily suppress console error messages
-      beforeEach(() => {
-        jest.spyOn(console, "error");
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore jest.spyOn adds this functionallity
-        console.error.mockImplementation(() => null);
-      });
-
-      afterEach(() => {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore jest.spyOn adds this functionallity
-        console.error.mockRestore();
-      });
-
       it("should throw an error if the instructions array length does not match the number of rovers", () => {
         expect(() => {
           new Navigation(
@@ -268,6 +292,45 @@ describe("Mars Rover Navigation", () => {
 
         expect(finalPositions).toEqual(["0 0 N"]);
       });
+    });
+  });
+
+  describe("Collision detection", () => {
+    it("should log an error if a collision would occur", () => {
+      const navigation = new Navigation(
+        smallPlateauSize,
+        [
+          new Rover(0, 0, "N", smallPlateauSize),
+          new Rover(0, 1, "N", smallPlateauSize),
+        ],
+        ["M", "M"],
+      );
+
+      const consoleSpy = jest.spyOn(console, "error");
+
+      navigation.navigateRovers();
+
+      expect(consoleSpy).toHaveBeenCalledWith(
+        "Collision for Rover 0 would occur at 0 1. Keeping this rover stationary.",
+      );
+    });
+
+    it("should not move the rover if it would cause a collision, but other rovers would move as normal", () => {
+      const navigation = new Navigation(
+        smallPlateauSize,
+        [
+          new Rover(0, 0, "N", smallPlateauSize),
+          new Rover(0, 1, "N", smallPlateauSize),
+          new Rover(0, 3, "N", smallPlateauSize),
+        ],
+        ["M", "M", "M"],
+      );
+
+      navigation.navigateRovers();
+
+      const finalPositions = navigation.getPositionsAndOrientations();
+
+      expect(finalPositions).toEqual(["0 0 N", "0 2 N", "0 4 N"]);
     });
   });
 });
