@@ -96,7 +96,6 @@ export class Navigation {
    * @param occupiedPositions Set of coordinates currently occupied by rovers.
    * @param index The index of the rover in the rovers array.
    */
-
   private navigateRover(
     rover: Rover,
     instructions: string,

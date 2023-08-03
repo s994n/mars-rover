@@ -86,7 +86,7 @@ The project has the following dependencies:
 - Various development dependencies for TypeScript, testing with Jest, and linting.
 
 ## Ideas for future work and enhancements
-The current implementation should fulfil the [challeng brief](#original-brief), but there are several areas where additional features and improvements could be introduced:
+The current implementation should fulfil the [challenge brief](#original-brief), but there are several areas where additional features and improvements could be introduced:
 
 Individual Rover Control: At present, the rovers are navigated all at once based on their position in the array. It might be beneficial to add functionality to control individual rovers based on their index or some other unique identifier. This would allow for more precise management and navigation of the rovers.
 
